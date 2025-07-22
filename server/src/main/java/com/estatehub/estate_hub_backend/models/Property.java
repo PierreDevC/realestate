@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.locationtech.jts.geom.Point;
+import com.estatehub.estate_hub_backend.enums.PropertyType;
+// import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -74,7 +75,7 @@ public class Property {
     
     @NotBlank(message = "Property type is required")
     @Column(name = "property_type", nullable = false)
-    private String propertyType; // APARTMENT, HOUSE, CONDO, TOWNHOUSE, etc.
+    private PropertyType propertyType; //enum
     
     @CreationTimestamp
     @Column(name = "posted_date", nullable = false, updatable = false)
@@ -114,7 +115,7 @@ public class Property {
     public Property() {}
     
     public Property(String name, String description, BigDecimal pricePerMonth, 
-                   Integer beds, Float baths, String propertyType, 
+                   Integer beds, Float baths, PropertyType propertyType, 
                    Location location, Manager manager) {
         this.name = name;
         this.description = description;
@@ -169,8 +170,8 @@ public class Property {
     public Integer getSquareFeet() { return squareFeet; }
     public void setSquareFeet(Integer squareFeet) { this.squareFeet = squareFeet; }
     
-    public String getPropertyType() { return propertyType; }
-    public void setPropertyType(String propertyType) { this.propertyType = propertyType; }
+    public PropertyType getPropertyType() { return propertyType; }
+    public void setPropertyType(PropertyType propertyType) { this.propertyType = propertyType; }
     
     public LocalDateTime getPostedDate() { return postedDate; }
     public void setPostedDate(LocalDateTime postedDate) { this.postedDate = postedDate; }
