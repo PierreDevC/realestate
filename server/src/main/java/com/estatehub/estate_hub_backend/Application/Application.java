@@ -1,4 +1,4 @@
-package com.estatehub.estate_hub_backend.models;
+package com.estatehub.estate_hub_backend.Application;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 import com.estatehub.estate_hub_backend.enums.ApplicationStatus;
+import com.estatehub.estate_hub_backend.Property.Property;
+import com.estatehub.estate_hub_backend.Tenant.Tenant;
 
 @Entity
 @Table(name = "applications")

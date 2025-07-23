@@ -1,6 +1,9 @@
-package com.estatehub.estate_hub_backend.models;
+package com.estatehub.estate_hub_backend.Lease;
 
+import com.estatehub.estate_hub_backend.Application.Application;
+import com.estatehub.estate_hub_backend.Property.Property;
 import com.estatehub.estate_hub_backend.enums.LeaseStatus;
+import com.estatehub.estate_hub_backend.Tenant.Tenant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;

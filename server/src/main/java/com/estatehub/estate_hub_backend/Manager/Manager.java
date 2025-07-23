@@ -1,4 +1,4 @@
-package com.estatehub.estate_hub_backend.models;
+package com.estatehub.estate_hub_backend.Manager;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

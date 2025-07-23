@@ -1,122 +1,85 @@
-package com.estatehub.estate_hub_backend.models;
+package com.estatehub.estate_hub_backend.Property;
+/* package com.estatehub.estate_hub_backend.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import com.estatehub.estate_hub_backend.enums.PropertyType;
-// import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "properties")
-public class Property {
+public class PropertyDto {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotBlank(message = "Property name is required")
     @Size(max = 255, message = "Property name must not exceed 255 characters")
-    @Column(nullable = false)
     private String name;
     
-    @Column(columnDefinition = "TEXT")
     private String description;
     
     @NotNull(message = "Price per month is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Column(name = "price_per_month", nullable = false, precision = 10, scale = 2)
+    @JsonProperty("pricePerMonth")
     private BigDecimal pricePerMonth;
     
     @DecimalMin(value = "0.0", message = "Security deposit must be non-negative")
-    @Column(name = "security_deposit", precision = 10, scale = 2)
+    @JsonProperty("securityDeposit")
     private BigDecimal securityDeposit;
     
     @DecimalMin(value = "0.0", message = "Application fee must be non-negative")
-    @Column(name = "application_fee", precision = 10, scale = 2)
+    @JsonProperty("applicationFee")
     private BigDecimal applicationFee;
     
-    @ElementCollection
-    @CollectionTable(name = "property_photos", joinColumns = @JoinColumn(name = "property_id"))
-    @Column(name = "photo_url")
+    @JsonProperty("photoUrls")
     private List<String> photoUrls;
     
-    @ElementCollection
-    @CollectionTable(name = "property_amenities", joinColumns = @JoinColumn(name = "property_id"))
-    @Column(name = "amenity")
     private List<String> amenities;
     
-    @ElementCollection
-    @CollectionTable(name = "property_highlights", joinColumns = @JoinColumn(name = "property_id"))
-    @Column(name = "highlight")
     private List<String> highlights;
     
-    @Column(name = "is_pets_allowed")
-    private Boolean isPetsAllowed = false;
+    @JsonProperty("isPetsAllowed")
+    private Boolean isPetsAllowed;
     
-    @Column(name = "is_parking_included")
-    private Boolean isParkingIncluded = false;
+    @JsonProperty("isParkingIncluded")
+    private Boolean isParkingIncluded;
     
     @Min(value = 0, message = "Number of beds must be non-negative")
-    @Column(nullable = false)
     private Integer beds;
     
     @DecimalMin(value = "0.0", message = "Number of baths must be non-negative")
-    @Column(nullable = false)
     private Float baths;
     
     @Min(value = 0, message = "Square feet must be non-negative")
-    @Column(name = "square_feet")
+    @JsonProperty("squareFeet")
     private Integer squareFeet;
     
     @NotBlank(message = "Property type is required")
-    @Column(name = "property_type", nullable = false)
-    private PropertyType propertyType; //enum
+    @JsonProperty("propertyType")
+    private String propertyType;
     
-    @CreationTimestamp
-    @Column(name = "posted_date", nullable = false, updatable = false)
+    @JsonProperty("postedDate")
     private LocalDateTime postedDate;
     
-    @DecimalMin(value = "0.0")
-    @DecimalMax(value = "5.0")
-    @Column(name = "average_rating", precision = 3, scale = 2)
+    @JsonProperty("averageRating")
     private Float averageRating;
     
-    @Min(value = 0)
-    @Column(name = "number_of_reviews")
-    private Integer numberOfReviews = 0;
+    @JsonProperty("numberOfReviews")
+    private Integer numberOfReviews;
     
-    @Column(name = "is_available", nullable = false)
-    private Boolean isAvailable = true;
+    @JsonProperty("isAvailable")
+    private Boolean isAvailable;
     
-    // Relations
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", nullable = false)
-    private Manager manager;
-    
-    // Audit fields
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    // Relations comme DTOs
+    private LocationDto location;
+    private ManagerDto manager;
     
     // Constructeurs
-    public Property() {}
+    public PropertyDto() {}
     
-    public Property(String name, String description, BigDecimal pricePerMonth, 
-                   Integer beds, Float baths, PropertyType propertyType, 
-                   Location location, Manager manager) {
+    public PropertyDto(String name, String description, BigDecimal pricePerMonth, 
+                      Integer beds, Float baths, String propertyType, 
+                      LocationDto location, ManagerDto manager) {
         this.name = name;
         this.description = description;
         this.pricePerMonth = pricePerMonth;
@@ -127,7 +90,7 @@ public class Property {
         this.manager = manager;
     }
     
-    // Getters et Setters
+    // Getters et Setters (identiques à l'entité)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -170,8 +133,8 @@ public class Property {
     public Integer getSquareFeet() { return squareFeet; }
     public void setSquareFeet(Integer squareFeet) { this.squareFeet = squareFeet; }
     
-    public PropertyType getPropertyType() { return propertyType; }
-    public void setPropertyType(PropertyType propertyType) { this.propertyType = propertyType; }
+    public String getPropertyType() { return propertyType; }
+    public void setPropertyType(String propertyType) { this.propertyType = propertyType; }
     
     public LocalDateTime getPostedDate() { return postedDate; }
     public void setPostedDate(LocalDateTime postedDate) { this.postedDate = postedDate; }
@@ -185,16 +148,11 @@ public class Property {
     public Boolean getIsAvailable() { return isAvailable; }
     public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
     
-    public Location getLocation() { return location; }
-    public void setLocation(Location location) { this.location = location; }
+    public LocationDto getLocation() { return location; }
+    public void setLocation(LocationDto location) { this.location = location; }
     
-    public Manager getManager() { return manager; }
-    public void setManager(Manager manager) { this.manager = manager; }
-    
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public ManagerDto getManager() { return manager; }
+    public void setManager(ManagerDto manager) { this.manager = manager; }
 }
 
+*/
