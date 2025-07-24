@@ -1,6 +1,7 @@
 package com.estatehub.estate_hub_backend.Property;
-/* package com.estatehub.estate_hub_backend.dto;
 
+import com.estatehub.estate_hub_backend.Location.LocationDto;
+import com.estatehub.estate_hub_backend.Manager.ManagerDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
@@ -155,4 +156,3 @@ public class PropertyDto {
     public void setManager(ManagerDto manager) { this.manager = manager; }
 }
 
-*/
