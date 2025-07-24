@@ -1,19 +1,17 @@
-package com.estatehub.estate_hub_backend.mapper;
+package com.estatehub.estate_hub_backend.Property;
 
-import com.estatehub.estate_hub_backend.Property.Property;
-import com.estatehub.estate_hub_backend.Property.PropertyDto;
 import com.estatehub.estate_hub_backend.enums.PropertyType;
 import org.mapstruct.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
+import com.estatehub.estate_hub_backend.Location.Location;
+import com.estatehub.estate_hub_backend.Manager.Manager;
+import com.estatehub.estate_hub_backend.Location.LocationDto;
+import com.estatehub.estate_hub_backend.Manager.ManagerDto;
 
-@Mapper(
-    componentModel = "spring",
-    uses = {LocationMapper.class, ManagerMapper.class},
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
+@Mapper(componentModel = "spring")
 public interface PropertyMapper {
 
     // ===== CONVERSIONS PRINCIPALES =====
@@ -22,6 +20,8 @@ public interface PropertyMapper {
      * Convertit une entité Property en PropertyDto
      */
     @Mapping(target = "propertyType", source = "propertyType", qualifiedByName = "enumToString")
+    @Mapping(target = "location", source = "location", qualifiedByName = "locationToDto")
+    @Mapping(target = "manager", source = "manager", qualifiedByName = "managerToDto")
     PropertyDto toDto(Property property);
 
     /**
@@ -72,16 +72,54 @@ public interface PropertyMapper {
         try {
             return PropertyType.valueOf(propertyType.toUpperCase());
         } catch (IllegalArgumentException e) {
-            // Log warning ou throw exception selon vos besoins
             return null;
         }
+    }
+
+    /**
+     * Convertit Location vers LocationDto
+     */
+    @Named("locationToDto")
+    default LocationDto locationToDto(Location location) {
+        if (location == null) return null;
+        
+        Double lat = null, lng = null;
+        if (location.getCoordinates() != null) {
+            lat = location.getCoordinates().getY();
+            lng = location.getCoordinates().getX();
+        }
+        
+        return new LocationDto(
+            location.getId(),
+            location.getAddress(),
+            location.getCity(),
+            location.getState(),
+            location.getCountry(),
+            location.getPostalCode(),
+            lat,
+            lng
+        );
+    }
+
+    /**
+     * Convertit Manager vers ManagerDto
+     */
+    @Named("managerToDto")
+    default ManagerDto managerToDto(Manager manager) {
+        if (manager == null) return null;
+        
+        return new ManagerDto(
+            manager.getId(),
+            manager.getName(),
+            manager.getEmail(),
+            manager.getPhoneNumber()
+        );
     }
 
     // ===== MÉTHODES DE MISE À JOUR =====
 
     /**
      * Met à jour une entité Property existante avec les données du DTO
-     * Ignore les champs null du DTO
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "postedDate", ignore = true)
@@ -91,8 +129,6 @@ public interface PropertyMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "propertyType", source = "propertyType", qualifiedByName = "stringToEnum")
     void updateEntityFromDto(PropertyDto dto, @MappingTarget Property property);
-
-    // ===== MAPPINGS SPÉCIALISÉS (si nécessaire) =====
 
     /**
      * Mapping pour la création (sans ID ni timestamps)
